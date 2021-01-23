@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>radarChart</title>
+</head>
+
+<body>
+    <canvas id="radarChart"></canvas>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="./utils.js"></script>
+<script>
+    // utils.js 에 있음
+   
+    var chartData = {
+        labels: ['a', 'b', 'c', 'd', 'e', 'f'],
+        datasets: [{
+            label: 'My First dataset',
+            fill: false,
+            backgroundColor: window.chartColors.red,
+            borderColor: window.chartColors.red,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ],
+        }, {
+            label: 'My Second dataset',
+            fill: false,
+            backgroundColor: window.chartColors.blue,
+            borderColor: window.chartColors.blue,
+            data: [
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor(),
+                randomScalingFactor()
+            ],
+        }]
+    };
+
+    var chartOptions = {
+        tooltips: {
+        	mode: 'label'
+        },
+        // scales: {
+        //     yAxes: [{
+        //         ticks: {
+        //             beginAtZero:true,
+        //             min: 0 ,
+        //             max: 100,
+        //             stepSize: 20
+        //         }
+        //     }]
+        // }
+    };
+
+    window.onload = function() {
+        var ctx = document.getElementById('radarChart').getContext('2d');
+        window.myRadar = new Chart(ctx, {
+            type: 'radar',
+            data: chartData,
+            options: chartOptions
+        });
+    }
+
+
+
+</script>
+
+</html>

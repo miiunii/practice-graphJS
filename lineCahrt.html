@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>lineChart</title>
+</head>
+
+<body>
+    <canvas id="lineChart"></canvas>
+    <button onclick="toggleSmmoth(this)" class>Smooth</button>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="./utils.js"></script>
+<script>
+    // Line Chart(Basic)
+    var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var config = {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+                label: 'My First dataset',
+                backgroundColor: window.chartColors.red,
+                borderColor: window.chartColors.red,
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor()
+                ],
+                fill: false,
+            }, {
+                label: 'My Second dataset',
+                fill: false,
+                backgroundColor: window.chartColors.blue,
+                borderColor: window.chartColors.blue,
+                data: [
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor(),
+                    randomScalingFactor()
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Chart.js Line Chart'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false,
+            },
+            hover: {
+                mode: 'nearest',
+                intersect: true
+            },
+            elements: {
+                line: {
+                    tension: 0.000001
+                }
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Month'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    }
+                }]
+            }
+        }
+    };
+
+    // take a graph
+    window.onload = function () {
+        var ctx = document.getElementById('lineChart').getContext('2d');
+        window.myLine = new Chart(ctx, config);
+    };
+    
+    // get random data
+    document.getElementById('randomizeData').addEventListener('click', function () {
+        config.data.datasets.forEach(function (dataset) {
+            dataset.data = dataset.data.map(function () {
+                return randomScalingFactor();
+            });
+
+        });
+
+        window.myLine.update();
+    });
+
+    // how to add data set
+    var colorNames = Object.keys(window.chartColors);
+    document.getElementById('addDataset').addEventListener('click', function () {
+        var colorName = colorNames[config.data.datasets.length % colorNames.length];
+        var newColor = window.chartColors[colorName];
+        var newDataset = {
+            label: 'Dataset ' + config.data.datasets.length,
+            backgroundColor: newColor,
+            borderColor: newColor,
+            data: [],
+            fill: false
+        };
+
+        for (var index = 0; index < config.data.labels.length; ++index) {
+            newDataset.data.push(randomScalingFactor());
+        }
+
+        config.data.datasets.push(newDataset);
+        window.myLine.update();
+    });
+
+    // how to add data
+    document.getElementById('addData').addEventListener('click', function () {
+        if (config.data.datasets.length > 0) {
+            var month = MONTHS[config.data.labels.length % MONTHS.length];
+            config.data.labels.push(month);
+
+            config.data.datasets.forEach(function (dataset) {
+                dataset.data.push(randomScalingFactor());
+            });
+
+            window.myLine.update();
+        }
+    });
+
+    // how to remove data set
+    document.getElementById('removeDataset').addEventListener('click', function () {
+        config.data.datasets.splice(0, 1);
+        window.myLine.update();
+    });
+
+    // how to remove data
+    document.getElementById('removeData').addEventListener('click', function () {
+        config.data.labels.splice(-1, 1); // remove the label first
+
+        config.data.datasets.forEach(function (dataset) {
+            dataset.data.pop();
+        });
+
+        window.myLine.update();
+    });
+
+    // change line style smooth/straight
+    function toggleSmmoth(btn) {
+        const Value = btn.classList.toggle('btn-on');
+        chart.options.elements.line.tention = value ? 0.4 : 0.000001;
+        chart.update();
+    }
+
+</script>
+
+</html>
